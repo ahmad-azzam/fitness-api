@@ -1,5 +1,8 @@
 import { Router } from "express";
-import { TRouter } from "../types";
+
+type TRouter = {
+  routes(): void;
+};
 
 abstract class BaseRouter implements TRouter {
   public router: Router;

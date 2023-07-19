@@ -1,12 +1,14 @@
 import express, { Application, NextFunction } from "express";
-import AuthRouter from "./router/public/auth/AuthRouter";
 import ErrorMiddleware from "./middlewares/errors";
+import MainRouter from "./router";
 
 class App {
   public app: Application;
+  protected mainRouter: MainRouter;
 
   constructor() {
     this.app = express();
+    this.mainRouter = new MainRouter();
     this.plugins();
     this.setupRoutes();
     this.setupErrorHandler();
@@ -18,11 +20,17 @@ class App {
   };
 
   protected setupRoutes = () => {
-    this.app.use("/api/v1", AuthRouter);
+    this.app.use("/api/v1", this.mainRouter.router);
   };
 
   protected setupErrorHandler = () => {
     this.app.use(ErrorMiddleware.errorHandler);
+  };
+
+  public start = (port: number) => {
+    this.app.listen(port, () => {
+      console.log(`server listening on port localhost:${port}`);
+    });
   };
 }
 
