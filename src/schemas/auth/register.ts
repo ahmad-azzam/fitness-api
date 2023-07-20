@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { PayloadLogin } from "./login";
 
-export const RegisterPayload = PayloadLogin.extend({
+export const PayloadRegister = PayloadLogin.extend({
   phone: z.string().min(8),
   name: z.string().nonempty(),
 });
 
-export type RegisterPayload = z.infer<typeof RegisterPayload>;
+export type PayloadRegister = z.infer<typeof PayloadRegister>;
