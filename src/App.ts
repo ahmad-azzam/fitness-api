@@ -1,6 +1,8 @@
-import express, { Application, NextFunction } from "express";
+import express, { Application } from "express";
 import ErrorMiddleware from "./middlewares/errors";
 import MainRouter from "./router";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 
 class App {
   public app: Application;
@@ -15,6 +17,10 @@ class App {
   }
 
   protected plugins = () => {
+    this.app.use(
+      cors({ credentials: true, origin: ["http://localhost:3000"] })
+    );
+    this.app.use(cookieParser());
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
   };

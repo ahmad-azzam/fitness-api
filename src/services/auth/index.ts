@@ -1,11 +1,13 @@
+import { Response } from "express";
 import Users from "../../models/users";
-import UserRepo from "../../repositories/user/UserRepo";
+import UserRepo from "../../repositories/user";
 import { PayloadLogin } from "../../schemas/auth/login";
 import { PayloadRegister } from "../../schemas/auth/register";
 import AuthUtils from "../../utils/AuthUtils";
+import CookieService from "../cookie";
 
 type TAuthService = {
-  login: (payloadLogin: PayloadLogin) => Promise<string>;
+  login: (payloadLogin: PayloadLogin, res: Response) => Promise<any>;
 
   register: (payloadRegister: PayloadRegister) => Promise<Users>;
 };
@@ -15,7 +17,7 @@ class AuthService implements TAuthService {
     return await UserRepo.add(payload);
   };
 
-  login = async ({ email, password }: PayloadLogin) => {
+  login = async ({ email, password }: PayloadLogin, res: Response) => {
     const getUser = await UserRepo.findByEmail(email);
 
     if (!getUser)
@@ -31,7 +33,16 @@ class AuthService implements TAuthService {
 
     const { email: userEmail, id, name, phone } = getUser;
 
-    return AuthUtils.generateToken({ email: userEmail, id, name, phone });
+    const token = AuthUtils.generateToken({
+      email: userEmail,
+      id,
+      name,
+      phone,
+    });
+
+    const cookie = new CookieService(res);
+
+    return cookie.setCookie({ name: "token", value: `Bearer ${token}` });
   };
 }
 

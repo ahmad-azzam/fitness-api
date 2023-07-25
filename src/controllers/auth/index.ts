@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { PayloadRegister } from "../../schemas/auth/register";
-import AuthService from "../../services/auth/AuthService";
+import AuthService from "../../services/auth";
 import { Sequelize, ValidationError } from "sequelize";
 import { PayloadLogin } from "../../schemas/auth/login";
 
@@ -33,9 +33,9 @@ class AuthController {
     next: NextFunction
   ) => {
     try {
-      const result = await AuthService.login(req.body);
+      await AuthService.login(req.body, res);
 
-      res.status(200).json({ result, messages: "Login Successfully" });
+      res.status(200).json({ messages: "Login Successfully" });
     } catch (error) {
       next(error);
     }

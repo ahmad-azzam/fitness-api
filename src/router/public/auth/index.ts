@@ -1,4 +1,4 @@
-import AuthController from "../../../controllers/auth/AuthController";
+import AuthController from "../../../controllers/auth";
 import ValidateMiddleware from "../../../middlewares/validate";
 import { PayloadLogin } from "../../../schemas/auth/login";
 import { PayloadRegister } from "../../../schemas/auth/register";
