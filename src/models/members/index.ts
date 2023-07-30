@@ -16,8 +16,8 @@ class Members extends Model<
 > {
   declare id: CreationOptional<number>;
   declare userId: number;
-  declare personalTrainerId: number;
-  declare packageId: number;
+  declare personalTrainerId: number | null;
+  declare packageId: number | null;
   declare joinDate: Date;
 
   declare createdAt?: CreationOptional<Date>;

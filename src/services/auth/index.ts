@@ -5,21 +5,36 @@ import { PayloadLogin } from "../../schemas/auth/login";
 import { PayloadRegister } from "../../schemas/auth/register";
 import AuthUtils from "../../utils/AuthUtils";
 import CookieService from "../cookie";
+import PersonalTrainerService from "../../services/personalTrainers";
 
 type TAuthService = {
   login: (payloadLogin: PayloadLogin, res: Response) => Promise<any>;
 
-  register: (payloadRegister: PayloadRegister) => Promise<Users>;
+  register: (payloadRegister: PayloadRegister) => Promise<any>;
 };
 
 class AuthService implements TAuthService {
   register = async (payload: PayloadRegister) => {
     console.log(payload);
-    return await UserRepo.add(payload);
+    const createUser = await UserRepo.create(payload);
+
+    if (createUser) {
+      switch (payload.type) {
+        case "PT":
+          return await PersonalTrainerService.create({
+            memberId: null,
+            price: null,
+            userId: createUser.get("id"),
+          });
+
+        default:
+          return "";
+      }
+    }
   };
 
   login = async ({ email, password }: PayloadLogin, res: Response) => {
-    const getUser = await UserRepo.findByEmail(email);
+    const getUser = await UserRepo.findOne({ where: { email } });
 
     if (!getUser)
       throw { name: "Bad Request", messages: "Email or password is wrong" };

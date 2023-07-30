@@ -15,8 +15,8 @@ class PersonalTrainers extends Model<
 > {
   declare id: CreationOptional<number>;
   declare userId: number;
-  declare memberId: number;
-  declare price: number;
+  declare memberId: number | null;
+  declare price: number | null;
 
   declare createdAt?: CreationOptional<Date>;
   declare updatedAt?: CreationOptional<Date>;
