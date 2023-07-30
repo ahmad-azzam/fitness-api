@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import AuthUtils from "../../utils/AuthUtils";
-import { UserInfo } from "../../schemas/user";
 
 class AuthMiddleware {
   public static authentication = (

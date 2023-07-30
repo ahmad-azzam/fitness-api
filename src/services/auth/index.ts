@@ -14,6 +14,7 @@ type TAuthService = {
 
 class AuthService implements TAuthService {
   register = async (payload: PayloadRegister) => {
+    console.log(payload);
     return await UserRepo.add(payload);
   };
 

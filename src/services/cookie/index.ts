@@ -15,6 +15,8 @@ class CookieService {
       expires: new Date(Date.now() + 604800000),
     });
   };
+
+  
 }
 
 export default CookieService;

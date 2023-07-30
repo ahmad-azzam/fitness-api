@@ -6,6 +6,7 @@ import {
   Model,
 } from "sequelize";
 import sequelizeConnection from "../../config/connection";
+import Members from "../members";
 
 class Packages extends Model<
   InferAttributes<Packages>,
@@ -43,5 +44,13 @@ Packages.init(
     tableName: "packages",
   }
 );
+
+Packages.hasMany(Members, {
+  foreignKey: "packageId",
+});
+
+Members.belongsTo(Packages, {
+  foreignKey: "packageId",
+});
 
 export default Packages;

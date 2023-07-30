@@ -7,6 +7,8 @@ import {
 } from "sequelize";
 import sequelizeConnection from "../../config/connection";
 import AuthUtils from "../../utils/AuthUtils";
+import PersonalTrainers from "../personalTrainers";
+import Members from "../members";
 
 class Users extends Model<
   InferAttributes<Users>,
