@@ -8,16 +8,16 @@ import {
 import sequelizeConnection from "../../config/connection";
 import Users from "../users";
 import PersonalTrainers from "../personalTrainers";
-import Packages from "../packages";
+import { v4 as uuid } from "uuid";
 
 class Members extends Model<
   InferAttributes<Members>,
   InferCreationAttributes<Members>
 > {
-  declare id: CreationOptional<number>;
-  declare userId: number;
-  declare personalTrainerId: number | null;
-  declare packageId: number | null;
+  declare id: CreationOptional<string>;
+  declare userId: string;
+  declare personalTrainerId: string | null;
+  declare packageId: string | null;
   declare joinDate: Date;
 
   declare createdAt?: CreationOptional<Date>;
@@ -27,13 +27,13 @@ class Members extends Model<
 Members.init(
   {
     id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+      type: DataTypes.UUID,
       primaryKey: true,
       allowNull: false,
+      defaultValue: () => uuid(),
     },
     userId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
       references: {
         model: "Users",
@@ -41,14 +41,14 @@ Members.init(
       },
     },
     personalTrainerId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       references: {
         model: "PersonalTrainers",
         key: "id",
       },
     },
     packageId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       references: {
         model: "Packages",
         key: "id",
@@ -76,6 +76,7 @@ Members.belongsTo(Users, {
 
 PersonalTrainers.hasMany(Members, {
   foreignKey: "personalTrainerId",
+  as: "members",
 });
 
 Members.belongsTo(PersonalTrainers, {

@@ -12,21 +12,21 @@ module.exports = {
 
     await queryInterface.addColumn("members", "userId", {
       allowNull: false,
-      type: Sequelize.INTEGER,
+      type: Sequelize.UUID,
       references: {
         model: "users",
         key: "id",
       },
     });
     await queryInterface.addColumn("members", "personalTrainerId", {
-      type: Sequelize.INTEGER,
+      type: Sequelize.UUID,
       references: {
         model: "personal_trainers",
         key: "id",
       },
     });
     await queryInterface.addColumn("members", "packageId", {
-      type: Sequelize.INTEGER,
+      type: Sequelize.UUID,
       references: {
         model: "packages",
         key: "id",

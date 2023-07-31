@@ -7,15 +7,15 @@ import {
 } from "sequelize";
 import sequelizeConnection from "../../config/connection";
 import Users from "../users";
-import Members from "../members";
+import { v4 as uuid } from "uuid";
 
 class PersonalTrainers extends Model<
   InferAttributes<PersonalTrainers>,
   InferCreationAttributes<PersonalTrainers>
 > {
-  declare id: CreationOptional<number>;
-  declare userId: number;
-  declare memberId: number | null;
+  declare id: CreationOptional<string>;
+  declare userId: string;
+  declare memberId: string | null;
   declare price: number | null;
 
   declare createdAt?: CreationOptional<Date>;
@@ -25,20 +25,20 @@ class PersonalTrainers extends Model<
 PersonalTrainers.init(
   {
     id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+      type: DataTypes.UUID,
       primaryKey: true,
       allowNull: false,
+      defaultValue: () => uuid(),
     },
     memberId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       references: {
         model: "Members",
         key: "id",
       },
     },
     userId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
       references: {
         model: "Users",
@@ -59,6 +59,7 @@ PersonalTrainers.init(
 
 Users.hasOne(PersonalTrainers, {
   foreignKey: "userId",
+  as: "personalTrainer",
 });
 
 PersonalTrainers.belongsTo(Users, {

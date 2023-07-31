@@ -15,6 +15,8 @@ class AuthMiddleware {
       const token = tokenCookie.split(" ")[1];
       const credential = AuthUtils.validateToken(token);
 
+      console.log(credential);
+
       req.app.locals.credential = credential;
 
       next();

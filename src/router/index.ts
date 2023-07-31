@@ -12,7 +12,9 @@ class MainRouter {
 
   constructor() {
     this.router = Router();
+
     this.authRouter = new AuthRouter();
+
     this.securedPackageRouter = new SecurePackageRouter();
 
     this.getRoutesPublic();
@@ -20,7 +22,7 @@ class MainRouter {
   }
 
   private getRoutesPublic = () => {
-    this.router.use(this.authRouter.router);
+    this.router.use("/public", this.authRouter.router);
   };
 
   private getRoutesSecure = () => {

@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export const PayloadPersonalTrainer = z.object({
-  userId: z.number().int(),
-  memberId: z.number().int().nullable(),
+  userId: z.string(),
+  memberId: z.string().nullable(),
   price: z.number().int().nullable(),
 });
 

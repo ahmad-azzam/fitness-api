@@ -1,5 +1,4 @@
 import Packages from "../../models/packages";
-import PackageRepo from "../../repositories/package";
 import { PayloadPackage } from "../../schemas/package";
 
 type TPackageService = {
@@ -15,23 +14,23 @@ type TPackageService = {
 
 class PackageService implements TPackageService {
   add = async (payload: PayloadPackage) => {
-    return await PackageRepo.create(payload);
+    return await Packages.create(payload);
   };
 
   edit = async (payload: PayloadPackage, id: string) => {
-    return PackageRepo.update(payload, id);
+    return await Packages.update(payload, { where: { id }, returning: true });
   };
 
   getAll = async () => {
-    return await PackageRepo.findAll();
+    return await Packages.findAll();
   };
 
   getById = async (id: string) => {
-    return await PackageRepo.findByPk(id);
+    return await Packages.findByPk(id);
   };
 
   destroy = async (id: string) => {
-    return await PackageRepo.destroy(id);
+    return await Packages.destroy({ where: { id } });
   };
 }
 

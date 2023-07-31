@@ -1,11 +1,13 @@
 import { Response } from "express";
 import Users from "../../models/users";
-import UserRepo from "../../repositories/user";
 import { PayloadLogin } from "../../schemas/auth/login";
 import { PayloadRegister } from "../../schemas/auth/register";
 import AuthUtils from "../../utils/AuthUtils";
 import CookieService from "../cookie";
 import PersonalTrainerService from "../../services/personalTrainers";
+import PersonalTrainers from "../../models/personalTrainers";
+import Members from "../../models/members";
+import UserUtils from "../../utils/UserUtils";
 
 type TAuthService = {
   login: (payloadLogin: PayloadLogin, res: Response) => Promise<any>;
@@ -15,8 +17,7 @@ type TAuthService = {
 
 class AuthService implements TAuthService {
   register = async (payload: PayloadRegister) => {
-    console.log(payload);
-    const createUser = await UserRepo.create(payload);
+    const createUser = await Users.create(payload);
 
     if (createUser) {
       switch (payload.type) {
@@ -34,7 +35,25 @@ class AuthService implements TAuthService {
   };
 
   login = async ({ email, password }: PayloadLogin, res: Response) => {
-    const getUser = await UserRepo.findOne({ where: { email } });
+    const getUser = await Users.findOne({
+      where: { email },
+      include: [
+        {
+          model: PersonalTrainers,
+          include: [
+            {
+              model: Members,
+              as: "members",
+            },
+          ],
+          as: "personalTrainer",
+          attributes: {
+            exclude: ["memberId", "createdAt", "updatedAt", "userId", "id"],
+          },
+        },
+        { model: Members, include: [PersonalTrainers] },
+      ],
+    });
 
     if (!getUser)
       throw { name: "Bad Request", messages: "Email or password is wrong" };
@@ -47,13 +66,15 @@ class AuthService implements TAuthService {
     if (!checkPassword)
       throw { name: "Bad Request", messages: "Email or password is wrong" };
 
-    const { email: userEmail, id, name, phone } = getUser;
+    const { email: userEmail, id, name, phone, type } = getUser;
 
     const token = AuthUtils.generateToken({
       email: userEmail,
       id,
       name,
       phone,
+      type,
+      userInfo: UserUtils.getInfo(getUser),
     });
 
     const cookie = new CookieService(res);

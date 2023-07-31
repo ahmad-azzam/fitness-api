@@ -7,12 +7,13 @@ import {
 } from "sequelize";
 import sequelizeConnection from "../../config/connection";
 import Members from "../members";
+import { v4 as uuid } from "uuid";
 
 class Packages extends Model<
   InferAttributes<Packages>,
   InferCreationAttributes<Packages>
 > {
-  declare id: CreationOptional<number>;
+  declare id: CreationOptional<string>;
   declare type: string;
   declare price: number;
 
@@ -23,10 +24,10 @@ class Packages extends Model<
 Packages.init(
   {
     id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+      type: DataTypes.UUID,
       primaryKey: true,
       allowNull: false,
+      defaultValue: () => uuid(),
     },
     type: {
       type: DataTypes.STRING,

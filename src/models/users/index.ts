@@ -7,18 +7,19 @@ import {
 } from "sequelize";
 import sequelizeConnection from "../../config/connection";
 import AuthUtils from "../../utils/AuthUtils";
-import PersonalTrainers from "../personalTrainers";
-import Members from "../members";
+import { EUserType } from "../../schemas/auth/register";
+import { v4 as uuid } from "uuid";
 
 class Users extends Model<
   InferAttributes<Users>,
   InferCreationAttributes<Users>
 > {
-  declare id: CreationOptional<number>;
+  declare id: CreationOptional<string>;
   declare name: string;
   declare email: string;
   declare password: string;
   declare phone: string;
+  declare type: EUserType;
 
   declare createdAt?: CreationOptional<Date>;
   declare updatedAt?: CreationOptional<Date>;
@@ -27,10 +28,10 @@ class Users extends Model<
 Users.init(
   {
     id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+      type: DataTypes.UUID,
       primaryKey: true,
       allowNull: false,
+      defaultValue: () => uuid(),
     },
     name: {
       type: DataTypes.STRING,
@@ -47,6 +48,9 @@ Users.init(
     },
     phone: {
       type: DataTypes.STRING,
+    },
+    type: {
+      type: DataTypes.ENUM(...Object.values(EUserType)),
     },
   },
   {
