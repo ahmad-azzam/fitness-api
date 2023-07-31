@@ -12,8 +12,11 @@ class UserUtils {
       case EUserType.PT:
         return user.get("personalTrainer");
 
+      case EUserType.MEMBER:
+        return user.get("members");
+
       default:
-        return null;
+        return user.get("members");
     }
   };
 }

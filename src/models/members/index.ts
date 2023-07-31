@@ -68,6 +68,7 @@ Members.init(
 
 Users.hasOne(Members, {
   foreignKey: "userId",
+  as: "members",
 });
 
 Members.belongsTo(Users, {
@@ -81,6 +82,7 @@ PersonalTrainers.hasMany(Members, {
 
 Members.belongsTo(PersonalTrainers, {
   foreignKey: "personalTrainerId",
+  as: "personalTrainer",
 });
 
 export default Members;

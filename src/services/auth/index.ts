@@ -4,7 +4,8 @@ import { PayloadLogin } from "../../schemas/auth/login";
 import { PayloadRegister } from "../../schemas/auth/register";
 import AuthUtils from "../../utils/AuthUtils";
 import CookieService from "../cookie";
-import PersonalTrainerService from "../../services/personalTrainers";
+import PersonalTrainerService from "../personalTrainer";
+import MemberService from "../member";
 import PersonalTrainers from "../../models/personalTrainers";
 import Members from "../../models/members";
 import UserUtils from "../../utils/UserUtils";
@@ -29,7 +30,12 @@ class AuthService implements TAuthService {
           });
 
         default:
-          return "";
+          return await MemberService.create({
+            joinDate: new Date(),
+            userId: createUser.get("id"),
+            packageId: null,
+            personalTrainerId: null,
+          });
       }
     }
   };
@@ -51,7 +57,11 @@ class AuthService implements TAuthService {
             exclude: ["memberId", "createdAt", "updatedAt", "userId", "id"],
           },
         },
-        { model: Members, include: [PersonalTrainers] },
+        {
+          model: Members,
+          as: "members",
+          include: [{ model: PersonalTrainers, as: "personalTrainer" }],
+        },
       ],
     });
 

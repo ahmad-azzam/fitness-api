@@ -52,6 +52,7 @@ Packages.hasMany(Members, {
 
 Members.belongsTo(Packages, {
   foreignKey: "packageId",
+  as: "package",
 });
 
 export default Packages;

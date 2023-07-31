@@ -7,8 +7,8 @@ class ErrorMiddleware {
     res: Response,
     next: NextFunction
   ) => {
-    console.log("ini masuk ga si", error);
-    res.status(500).json({ message: "Error cuuy" });
+    console.log(error);
+    res.status(500).json({ message: "Error cuuy", error });
   };
 }
 
